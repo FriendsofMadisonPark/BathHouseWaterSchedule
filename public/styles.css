@@ -1,0 +1,402 @@
+/* ── Reset & Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #eef2f7;
+  color: #2d3748;
+  min-height: 100vh;
+}
+
+/* ── Site Header ──────────────────────────────────────────────── */
+.site-header {
+  background: #1a3660;
+  color: white;
+  padding: 18px 24px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+}
+
+.header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.site-header h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Page Layout ──────────────────────────────────────────────── */
+.page-layout {
+  max-width: 1300px;
+  margin: 24px auto;
+  padding: 0 16px 40px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────── */
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a3660;
+  margin-bottom: 12px;
+}
+
+/* Contacts */
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contacts-table th {
+  background: #1a3660;
+  color: white;
+  padding: 7px 10px;
+  text-align: left;
+  font-size: 0.8rem;
+  border-radius: 4px 4px 0 0;
+}
+
+.contacts-table td {
+  padding: 8px 10px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #e8eef4;
+  color: #2d3748;
+}
+
+.contacts-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Legend */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.legend-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid #d0dae8;
+}
+
+.legend-swatch.filled { background: #3b82f6; }
+.legend-swatch.empty  { background: white; }
+
+/* Instructions */
+.instructions-card p {
+  font-size: 0.82rem;
+  color: #5a677a;
+  line-height: 1.5;
+}
+
+/* ── Calendars Area ───────────────────────────────────────────── */
+.calendars-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
+
+/* ── Month Calendar ───────────────────────────────────────────── */
+.month-calendar {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.month-title {
+  background: #1a3660;
+  color: white;
+  text-align: center;
+  padding: 14px 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-top: 1px solid #dde5f0;
+}
+
+.weekday-header {
+  background: #2d5fa0;
+  color: white;
+  text-align: center;
+  padding: 8px 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Day Cell ─────────────────────────────────────────────────── */
+.day-cell {
+  background: white;
+  border-right: 1px solid #dde5f0;
+  border-bottom: 1px solid #dde5f0;
+  cursor: pointer;
+  transition: filter 0.15s;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-cell:hover { filter: brightness(0.95); }
+
+.day-cell.blank-cell {
+  background: #f7f9fc;
+  cursor: default;
+  pointer-events: none;
+}
+
+.day-cell.blank-cell:hover { filter: none; }
+
+/* Cell header strip — shows day number */
+.cell-num {
+  padding: 5px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5a677a;
+  background: transparent;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+}
+
+/* Blue header when filled */
+.day-cell.filled-cell .cell-num {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Cell body — shows assigned name */
+.cell-name {
+  padding: 4px 8px 8px;
+  font-size: 0.78rem;
+  color: #2d3748;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn:hover  { opacity: 0.88; }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary   { background: #3b82f6; color: white; }
+.btn-secondary { background: #64748b; color: white; }
+.btn-danger    { background: #ef4444; color: white; }
+.btn-outline   { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.6); }
+.btn-outline:hover { background: rgba(255,255,255,0.15); }
+
+/* ── Modal ────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 900;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  z-index: 1000;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  box-shadow: 0 16px 50px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.modal-header h3 {
+  color: #1a3660;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.modal-close:hover { background: #f1f5f9; }
+
+.modal-date {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+}
+
+.quick-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.quick-select {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.quick-btn {
+  padding: 6px 14px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.quick-btn:hover {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+#nameInput {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#nameInput:focus { border-color: #3b82f6; }
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Toast ────────────────────────────────────────────────────── */
+#toastContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+}
+
+.toast {
+  background: #1e293b;
+  color: white;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: toastIn 0.25s ease;
+}
+
+.toast.success { background: #16a34a; }
+.toast.error   { background: #dc2626; }
+
+@keyframes toastIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.hidden { display: none !important; }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .page-layout { flex-direction: column; }
+  .sidebar { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; }
+  .card { flex: 1; min-width: 150px; }
+}
+
+@media (max-width: 500px) {
+  .site-header h1 { font-size: 1.2rem; }
+  .cell-num { font-size: 0.72rem; }
+  .cell-name { font-size: 0.72rem; }
+  .day-cell { min-height: 54px; }
+}

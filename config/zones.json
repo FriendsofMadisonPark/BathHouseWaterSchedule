@@ -1,0 +1,34 @@
+{
+  "zones": [
+    {
+      "name": "Susan",
+      "days": ["Mon"],
+      "minutes": 45
+    },
+    {
+      "name": "Jon and Octavia",
+      "days": ["Tue", "Thu"],
+      "minutes": 45
+    },
+    {
+      "name": "Greg and Kip",
+      "days": ["Fri"],
+      "minutes": 45
+    },
+    {
+      "name": "Kevin",
+      "days": ["Sun", "Wed", "Sat"],
+      "minutes": 45
+    }
+  ],
+  "date_overrides": {
+    "2026-06-26": "Coverage Needed",
+    "2026-07-01": "Coverage Needed",
+    "2026-07-02": "Coverage Needed",
+    "2026-07-03": "Coverage Needed",
+    "2026-07-04": "Coverage Needed",
+    "2026-07-05": "Coverage Needed",
+    "2026-07-07": "Coverage Needed",
+    "2026-07-09": "Coverage Needed"
+  }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Madison Park Beach Watering Schedule</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <h1>🌊 Madison Park Beach</h1>
+        <h2>Watering Schedule</h2>
+      </div>
+      <div class="header-actions">
+        <a href="/api/download" class="btn btn-outline">📥 Download CSV</a>
+        <label class="btn btn-outline">
+          📤 Upload CSV
+          <input type="file" id="csvUpload" accept=".csv" hidden>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-layout">
+
+    <aside class="sidebar">
+      <div class="card contacts-card">
+        <h3>📋 Contacts</h3>
+        <table class="contacts-table">
+          <thead>
+            <tr><th>Name</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Kevin</td></tr>
+            <tr><td>Octavia</td></tr>
+            <tr><td>Dewright</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card legend-card">
+        <h3>Legend</h3>
+        <div class="legend-item">
+          <div class="legend-swatch filled"></div>
+          <span>Day assigned</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch empty"></div>
+          <span>Available</span>
+        </div>
+      </div>
+
+      <div class="card instructions-card">
+        <h3>How to use</h3>
+        <p>Click any day to assign a name or clear an assignment. Changes save immediately.</p>
+        <p style="margin-top:8px">Download / Upload CSV to bulk-edit the schedule.</p>
+      </div>
+    </aside>
+
+    <main class="calendars-area" id="calendarsArea">
+      <!-- Calendars rendered by JavaScript -->
+    </main>
+
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="overlay" class="overlay hidden" onclick="closeModal()"></div>
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3>Edit Assignment</h3>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <p id="modalDateLabel" class="modal-date"></p>
+    <p class="quick-label">Quick select:</p>
+    <div class="quick-select">
+      <button class="quick-btn" onclick="quickSelect('Kevin')">Kevin</button>
+      <button class="quick-btn" onclick="quickSelect('Octavia')">Octavia</button>
+      <button class="quick-btn" onclick="quickSelect('Dewright')">Dewright</button>
+    </div>
+    <input type="text" id="nameInput" placeholder="Or type a name…" autocomplete="off">
+    <div class="modal-actions">
+      <button onclick="saveName()" class="btn btn-primary">💾 Save</button>
+      <button onclick="clearName()" class="btn btn-danger">🗑 Clear</button>
+      <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+
+  <div id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
