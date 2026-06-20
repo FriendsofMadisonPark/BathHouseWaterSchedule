@@ -398,7 +398,9 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
         }}
       }};
 
-      const setLabel = (eventEl, label) => {{
+      const setLabel = (cellEl, label) => {{
+        const eventEl = cellEl.querySelector('.event[data-date][data-editable="true"]');
+        if (!eventEl) return;
         const strong = eventEl.querySelector("strong");
         if (!strong) return;
         strong.textContent = label;
@@ -418,19 +420,6 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
         if (!date) return;
         byDate[date] = cellEl;
       }});
-
-      const setLabel = (cellEl, label) => {{
-        const eventEl = cellEl.querySelector('.event[data-date][data-editable="true"]');
-        if (!eventEl) return;
-        const strong = eventEl.querySelector("strong");
-        if (!strong) return;
-        strong.textContent = label;
-        if (label.trim().toLowerCase() === "coverage needed") {{
-          eventEl.classList.add("coverage");
-        }} else {{
-          eventEl.classList.remove("coverage");
-        }}
-      }};
 
       const applyEdits = (edits) => {{
         if (!edits || typeof edits !== "object") return;
