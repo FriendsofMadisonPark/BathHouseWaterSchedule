@@ -226,6 +226,7 @@ def render_week_html(schedule: list[dict[str, object]], start_date: str) -> str:
 
 def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str:
     start = datetime.strptime(start_date, "%Y-%m-%d")
+    today = date.today()
     schedule_by_date = {row["date"]: row for row in schedule}
     days = len(schedule)
     start_month = start.month
@@ -250,29 +251,34 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
         rows_html: list[str] = []
         for week in cal.monthdatescalendar(year, month):
             cells: list[str] = []
+            all_outside_plan = True
             for current_day in week:
                 if current_day.month != month:
                     cells.append('<td class="empty"></td>')
                     continue
 
                 date_text = current_day.isoformat()
+                is_past = current_day < today
+                past_class = " past" if is_past else ""
                 row = schedule_by_date.get(date_text)
                 if row is None:
                     cells.append(
-                        f'<td><div class="day-num">{current_day.day}</div><div class="event none"><strong>Outside Plan</strong></div></td>'
+                        f'<td class="empty{past_class}"><div class="day-num">{current_day.day}</div><div class="event none"><strong>Outside Plan</strong></div></td>'
                     )
                     continue
 
+                all_outside_plan = False
                 zones = row["zones"] if row else []
                 zone_html = escape(zones[0]) if zones else "Coverage Needed"
                 event_class = "event july editable" if month != start_month else "event editable"
                 if zone_html.lower() == "coverage needed":
                     event_class = f"{event_class} coverage"
                 cells.append(
-                  f'<td class="editable-cell" data-date="{date_text}" data-editable="true"><div class="day-num">{current_day.day}</div><div class="{event_class}" data-date="{date_text}" data-editable="true"><strong>{zone_html}</strong></div></td>'
+                  f'<td class="editable-cell{past_class}" data-date="{date_text}" data-editable="true"><div class="day-num">{current_day.day}</div><div class="{event_class}" data-date="{date_text}" data-editable="true"><strong>{zone_html}</strong></div></td>'
                 )
 
-            rows_html.append(f"<tr>{''.join(cells)}</tr>")
+            if not all_outside_plan:
+                rows_html.append(f"<tr>{''.join(cells)}</tr>")
 
         month_sections.append(
             f"""
@@ -330,6 +336,8 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
     .event.editable {{ cursor: pointer; }}
     .event strong {{ font-size: 1.05rem; letter-spacing: 0.02em; }}
     .event.none {{ background: #f5f3ee; border-left-color: #c1b8a0; }}
+    .calendar td.past .day-num,
+    .calendar td.past .event strong {{ color: #999999; }}
     @media (max-width: 900px) {{
       .hero {{ flex-direction: column; align-items: start; }}
       .wrap {{ padding: 20px 12px 28px; }}
