@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Madison Park Watering Calendar icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2f6f4f" />
+      <stop offset="100%" stop-color="#1f4f38" />
+    </linearGradient>
+    <linearGradient id="drop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d9f3e5" />
+      <stop offset="100%" stop-color="#8cc8a9" />
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#bg)" />
+  <rect x="120" y="118" width="272" height="248" rx="30" fill="#f4f9f6" opacity="0.96" />
+  <rect x="120" y="118" width="272" height="62" rx="30" fill="#c9e4d5" />
+  <circle cx="174" cy="149" r="10" fill="#2f6f4f" />
+  <circle cx="256" cy="149" r="10" fill="#2f6f4f" />
+  <circle cx="338" cy="149" r="10" fill="#2f6f4f" />
+  <path d="M256 206c-43 54-64 87-64 115 0 36 29 64 64 64s64-28 64-64c0-28-21-61-64-115z" fill="url(#drop)" />
+  <path d="M256 252c-18 22-28 40-28 54 0 16 13 28 28 28s28-12 28-28c0-14-10-32-28-54z" fill="#2f6f4f" opacity="0.35" />
+</svg>
