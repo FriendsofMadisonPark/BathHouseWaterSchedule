@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import date, datetime, timedelta
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -16,7 +17,7 @@ from scheduler import (
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 CONFIG_PATH = ROOT_DIR / "config" / "zones.json"
-SHARED_EDITS_PATH = ROOT_DIR / "config" / "shared_edits.json"
+SHARED_EDITS_PATH = Path(os.environ.get("BATHHOUSE_SHARED_EDITS_PATH", str(ROOT_DIR / "config" / "shared_edits.json")))
 CALENDAR_PATH = ROOT_DIR / "calendar.html"
 
 
@@ -169,6 +170,7 @@ def main() -> None:
 
     generate_calendar_file()
     server = ThreadingHTTPServer((args.host, args.port), SharedCalendarHandler)
+    print(f"Using shared edits file: {SHARED_EDITS_PATH}")
     print(f"Shared calendar server running at http://{args.host}:{args.port}")
     print("Open / on any device on the same network to view and edit.")
     server.serve_forever()

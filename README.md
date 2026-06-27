@@ -67,6 +67,26 @@ Notes:
 - Cell edits are shared through `config/shared_edits.json`.
 - `Coverage Needed` values are shown in red.
 
+## Cloud Persistence (Important)
+
+If your cloud platform recreates VMs/containers, local files in the app directory can be lost on restart.
+Use a mounted persistent volume and set environment variables so edits are written there.
+
+Node server (`server.js`):
+
+```bash
+BATHHOUSE_DATA_DIR=/persistent/bathhouse/data
+# optional: BATHHOUSE_DATA_FILE=/persistent/bathhouse/data/schedule.csv
+```
+
+Python shared server (`src/shared_server.py`):
+
+```bash
+BATHHOUSE_SHARED_EDITS_PATH=/persistent/bathhouse/shared_edits.json
+```
+
+At startup, each server logs the exact file path it is using. Verify that path is on your persistent disk/volume.
+
 Generate a 7-day calendar starting on Sunday:
 
 ```bash

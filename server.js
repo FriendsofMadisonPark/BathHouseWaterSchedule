@@ -6,14 +6,16 @@ const { stringify } = require('csv-stringify/sync');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
-const DATA_FILE = path.join(DATA_DIR, 'schedule.csv');
+const DATA_DIR = process.env.BATHHOUSE_DATA_DIR || path.join(__dirname, 'data');
+const DATA_FILE = process.env.BATHHOUSE_DATA_FILE || path.join(DATA_DIR, 'schedule.csv');
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, 'date,name\n');
+
+console.log(`Using schedule data file: ${DATA_FILE}`);
 
 function readSchedule() {
   try {
