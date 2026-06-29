@@ -321,6 +321,36 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
     h1 {{ margin: 0; font-size: clamp(2rem, 4vw, 3.2rem); }}
     .sub {{ margin: 8px 0 0; color: var(--muted); }}
     .badge {{ padding: 10px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; }}
+    .save-status {{
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }}
+    .save-status.state-saving {{
+      color: #8a5a1d;
+      border-color: #d9c18f;
+      background: #fff7e8;
+    }}
+    .save-status.state-synced {{
+      color: #1f5d3b;
+      border-color: #b9d7c7;
+      background: #edf7f1;
+    }}
+    .save-status.state-local {{
+      color: #244567;
+      border-color: #bdd1e4;
+      background: #ecf4fb;
+    }}
+    .save-status.state-error {{
+      color: #8f1d26;
+      border-color: #e6b9bf;
+      background: #fdeef0;
+    }}
     .month-block {{ margin-top: 20px; }}
     .month-block h2 {{ margin: 0 0 10px; font-size: 1.45rem; }}
     .calendar-wrap {{ overflow-x: auto; padding-bottom: 8px; }}
@@ -361,6 +391,7 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
       </div>
       <div class="badge">Rolling plan</div>
     </div>
+    <div class="save-status" id="saveStatus" role="status" aria-live="polite">Ready.</div>
     {''.join(month_sections)}
   </div>
   <script>
@@ -379,6 +410,20 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
       }};
 
       const canUseSharedApi = window.location.protocol.startsWith("http");
+      const statusEl = document.getElementById("saveStatus");
+      const statusClasses = ["state-saving", "state-synced", "state-local", "state-error"];
+      const setSaveStatus = (message, state) => {{
+        if (!statusEl) return;
+        statusEl.textContent = message;
+        statusEl.classList.remove(...statusClasses);
+        if (state) statusEl.classList.add(state);
+      }};
+
+      if (!canUseSharedApi) {{
+        setSaveStatus("Local-only mode: edits are saved in this browser only.", "state-local");
+      }} else {{
+        setSaveStatus("Connected to shared calendar.", "state-synced");
+      }}
 
       const fetchSharedEdits = async () => {{
         if (!canUseSharedApi) return null;
@@ -441,9 +486,13 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
       applyEdits(localEdits);
 
       fetchSharedEdits().then((edits) => {{
-        if (!edits) return;
+        if (!edits) {{
+          setSaveStatus("Could not load shared edits. New changes may not persist for everyone.", "state-error");
+          return;
+        }}
         sharedEdits = edits;
         applyEdits(sharedEdits);
+        setSaveStatus("Connected to shared calendar.", "state-synced");
       }});
 
       editable.forEach((cellEl) => {{
@@ -456,13 +505,24 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
           if (next === null) return;
           const value = next.trim() || "Coverage Needed";
 
+          setSaveStatus(`Saving ${{date}}...`, "state-saving");
           localEdits[date] = value;
           saveLocalEdits(localEdits);
           setLabel(cellEl, value);
 
           const sharedSaved = await saveSharedEdit(date, value);
-          if (sharedSaved && sharedEdits) {{
-            sharedEdits[date] = value;
+          if (sharedSaved) {{
+            if (sharedEdits) {{
+              sharedEdits[date] = value;
+            }}
+            setSaveStatus(`Saved and synced for ${{date}}.`, "state-synced");
+            return;
+          }}
+
+          if (!canUseSharedApi) {{
+            setSaveStatus(`Saved locally for ${{date}}. Not synced to server.`, "state-local");
+          }} else {{
+            setSaveStatus(`Saved locally for ${{date}}, but server sync failed.`, "state-error");
           }}
         }});
       }});
