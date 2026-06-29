@@ -468,10 +468,12 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
       let sharedEdits = null;
       const editable = document.querySelectorAll('td[data-date][data-editable="true"]');
       const byDate = {{}};
+      const baseLabels = {{}};
       editable.forEach((cellEl) => {{
         const date = cellEl.getAttribute("data-date");
         if (!date) return;
         byDate[date] = cellEl;
+        baseLabels[date] = cellEl.querySelector("strong")?.textContent?.trim() || "Coverage Needed";
       }});
 
       const applyEdits = (edits) => {{
@@ -483,15 +485,28 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
         }});
       }};
 
-      applyEdits(localEdits);
+      const renderFromBase = (edits) => {{
+        Object.entries(byDate).forEach(([date, cellEl]) => {{
+          setLabel(cellEl, baseLabels[date] || "Coverage Needed");
+        }});
+        applyEdits(edits);
+      }};
+
+      if (!canUseSharedApi) {{
+        applyEdits(localEdits);
+      }}
 
       fetchSharedEdits().then((edits) => {{
         if (!edits) {{
+          if (canUseSharedApi) {{
+            applyEdits(localEdits);
+          }}
           setSaveStatus("Could not load shared edits. New changes may not persist for everyone.", "state-error");
           return;
         }}
         sharedEdits = edits;
-        applyEdits(sharedEdits);
+        renderFromBase(sharedEdits);
+        saveLocalEdits(sharedEdits);
         setSaveStatus("Connected to shared calendar.", "state-synced");
       }});
 
@@ -515,6 +530,7 @@ def render_range_html(schedule: list[dict[str, object]], start_date: str) -> str
             if (sharedEdits) {{
               sharedEdits[date] = value;
             }}
+            saveLocalEdits(sharedEdits || localEdits);
             setSaveStatus(`Saved and synced for ${{date}}.`, "state-synced");
             return;
           }}
