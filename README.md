@@ -87,6 +87,30 @@ BATHHOUSE_SHARED_EDITS_PATH=/persistent/bathhouse/shared_edits.json
 
 At startup, each server logs the exact file path it is using. Verify that path is on your persistent disk/volume.
 
+## Render Setup
+
+For Render, file storage is ephemeral unless you add a Persistent Disk.
+
+1. Open your Render web service and add a Persistent Disk.
+2. Use mount path `/var/data`.
+3. Set environment variable `BATHHOUSE_SHARED_EDITS_PATH=/var/data/shared_edits.json`.
+4. Start the shared server with host `0.0.0.0` and port from Render's `PORT` env var.
+
+Example start command:
+
+```bash
+python src/shared_server.py --host 0.0.0.0 --days 140
+```
+
+The server now defaults to the `PORT` environment variable when `--port` is not provided.
+
+Verification after deploy:
+
+1. In logs, confirm it prints a shared edits file under `/var/data`.
+2. Make one edit in the calendar.
+3. Restart the Render service.
+4. Confirm the edit still exists.
+
 Generate a 7-day calendar starting on Sunday:
 
 ```bash

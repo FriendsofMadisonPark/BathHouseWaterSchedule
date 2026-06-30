@@ -142,7 +142,8 @@ class SharedCalendarHandler(BaseHTTPRequestHandler):
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run shared editable calendar server.")
     parser.add_argument("--host", default="0.0.0.0", help="Host to bind (default: 0.0.0.0).")
-    parser.add_argument("--port", type=int, default=8000, help="Port to bind (default: 8000).")
+    default_port = int(os.environ.get("PORT", "8000"))
+    parser.add_argument("--port", type=int, default=default_port, help="Port to bind (default: PORT env var or 8000).")
     parser.add_argument(
         "--start-date",
         default=SETTINGS.start_date,
